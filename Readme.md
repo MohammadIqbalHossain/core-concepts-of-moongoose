@@ -116,77 +116,248 @@ Video-1:
 
 Now, you have a well-organized project structure with necessary configurations. Update the code according to your project requirements.
 
-Video-3: setup typescript eslint.
+## Video-3: Setting up TypeScript ESLint
 
-Read this docs: to setup eslint to your code. https://blog.logrocket.com/linting-typescript-eslint-prettier/
+Follow the documentation provided to set up ESLint for your TypeScript code. The detailed instructions can be found at [Linting TypeScript with ESLint and Prettier](https://blog.logrocket.com/linting-typescript-eslint-prettier/).
 
-Video - 4:
+## Video-4: Advanced ESLint Configuration
 
-Add some roles to `.eslinrc.json ` when we violate these rules our vscode will give error.
-Run your script to fix and check errors.
+1. Add specific roles to your `.eslintrc.json` file. Violating these rules will prompt errors in your VSCode, and you can run a script to fix and check errors.
 
-Install pretieer.
+2. Install Prettier using the following command:
+
+   ```bash
+   npm install --save-dev prettier
+   ```
+
+3. Create a formatting script for easier use:
+
+   ```json
+   "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+   ```
+
+4. In VSCode settings, set Prettier as the default formatter:
+
+   ```json
+   "editor.defaultFormatter": "esbenp.prettier-vscode",
+   "editor.formatOnSave": true
+   ```
+
+5. Install the Prettier and ESLint extensions in VSCode. In case of conflicts, resolve them by installing the following package:
+
+   ```bash
+   npm install --save-dev eslint-config-prettier
+   ```
+
+6. Update your `.eslintrc.json` file:
+
+   ```json
+   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"]
+   ```
+
+   This integrates Prettier seamlessly with ESLint.
+
+7. Create a script command for Prettier to fix formatting:
+
+   ```json
+   "prettier:fix": "npx prettier --write src"
+   ```
+
+## Git Integration and Push Changes
+
+1. Initialize a git repository for your project.
+
+2. Add and commit your changes, then push them to the repository.
+
+## TypeScript Development Setup
+
+1. Install `ts-node-dev` for development:
+
+   ```bash
+   npm install --save-dev ts-node-dev
+   ```
+
+2. Create scripts for starting the app in development and production:
+
+   ```json
+   "start:dev": "tsnd --respawn ./src/app/server.ts",
+   "start:prod": "node ./dist/app/server.js"
+   ```
+
+## Environment Variable for App Position
+
+Create an environment variable to indicate the app's position:
+
+```env
+NODE_ENV=development
+```
+
+Adjust the value to "production" for the production environment.
 
 ```
-npm install -save -D priteer
+
 ```
 
-Now try to format with prettier. make a script to make formatting easy.
+## Video-5: Modular patter and MVC pattern.
 
-```json
-"format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+Sure, let's break down the concepts of MVC (Model-View-Controller) and modular pattern in a simple way with examples:
+
+### MVC Pattern:
+
+**1. Model (Data):** Represents the application's data and business logic.
+
+**2. View (User Interface):** Presents the data to the user and handles user input.
+
+**3. Controller (Logic):** Manages the communication between the Model and View, handling user input and updating the Model.
+
+#### Example Code:
+
+Let's consider a simple example of a to-do list application.
+
+**Model (`model.js`):**
+
+```javascript
+// model.js
+class TodoModel {
+  constructor() {
+    this.todos = []
+  }
+
+  addTodo(todo) {
+    this.todos.push(todo)
+  }
+
+  getTodos() {
+    return this.todos
+  }
+}
+
+module.exports = TodoModel
 ```
 
-Go to vs code setting and make prettier default formatter.
+**View (`view.js`):**
 
-paste or overwrite these scripts.
+```javascript
+// view.js
+class TodoView {
+  displayTodos(todos) {
+    todos.forEach((todo, index) => {
+      console.log(`${index + 1}. ${todo}`)
+    })
+  }
+}
 
-```json
- "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
+module.exports = TodoView
 ```
 
-Install prettier and eslint extension in your vs code.
+**Controller (`controller.js`):**
 
-Sometimes prettier and eslint makes confilicts with eatchother for formating code. to fix the problem we have to install another package.
+```javascript
+// controller.js
+class TodoController {
+  constructor(model, view) {
+    this.model = model
+    this.view = view
+  }
 
-run this command.
+  addTodo(todo) {
+    this.model.addTodo(todo)
+    this.updateView()
+  }
 
-```commad
-npm install --save-dev eslint-config-prettier
+  updateView() {
+    const todos = this.model.getTodos()
+    this.view.displayTodos(todos)
+  }
+}
+
+module.exports = TodoController
 ```
 
-Go to .eslintrc.json file and overwrite this scripts.
+### Modular Pattern:
 
-```json
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+Modular pattern involves organizing code into independent, reusable modules.
+
+#### Example Code:
+
+**Module 1 (`module1.js`):**
+
+```javascript
+// module1.js
+const greeting = 'Hello'
+
+function sayHello(name) {
+  console.log(`${greeting}, ${name}!`)
+}
+
+module.exports = { sayHello }
 ```
 
-make a script command for prettier fix .
+**Module 2 (`module2.js`):**
 
-```json
- "prettier:fix":  "npx prettier --write src"
+```javascript
+// module2.js
+function calculateSum(a, b) {
+  return a + b
+}
+
+module.exports = { calculateSum }
 ```
 
-Add git repository to the project. and push your changes.
+**Main Program (`app.js`):**
 
-Install ts-node-dev package to run typescript file in for development. with ts-node-dev we can run ts file and it'll run changes on the flight.
+```javascript
+// app.js
+const module1 = require('./module1')
+const module2 = require('./module2')
 
-give this command
-
-```commad
-npm i ts-node-dev --save-dev
+module1.sayHello('John')
+const result = module2.calculateSum(5, 3)
+console.log(`Sum: ${result}`)
 ```
 
-make a script to for starting app with ts-node dev and add another script to run the app in production with node.
+### Explanation:
 
-```json
-"start:dev": "tsnd --respawn ./src/app/server.ts",
-"start:prod": "node ./dist/app/server.js",
-```
+- **MVC Pattern:** In the to-do list example, the `TodoModel` represents the data (Model), `TodoView` handles how the data is displayed (View), and `TodoController` manages the interaction between the Model and View.
 
-Make a environment variable to indicate what is the position of our app right node.
+- **Modular Pattern:** In the modular example, `module1` and `module2` are independent modules. Each module encapsulates its functionality, and the main program (`app.js`) can import and use these modules as needed.
 
-```js
-NODE_ENV = developmnet // if it's in productin we'll use 'Production' here.
+By combining both patterns, you can create scalable and maintainable applications, where the MVC pattern helps structure the application's architecture, and the modular pattern enhances code organization and reusability.
+
+using moudular patter.
+
+create a folder `modules` in the `./src/app` path. In modules folder make a flder `student` in student make a file `student.interface.ts`
+
+Make a interface for a student there.
+
+```typescript
+//Creating a interface for student .
+import { Schema, model, connect } from 'mongoose'
+
+type Guardian = {
+  fatherName: string
+  fatherOccupation: string
+  fatherContactNo: string
+  motherName: string
+  motherOccupation: string
+  motherContactNo: string
+}
+
+export type Student = {
+  id: string
+  name: {
+    firstName: string
+    middleName: string
+    lastName: string
+  }
+  gender: 'male' | 'female'
+  email: string
+  avatar?: string
+  contactNo: string
+  emergencyContactNo: string
+  BloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-'
+  presentAddress: string
+  permanentAddress: string
+  guardian: Guardian
+}
 ```
