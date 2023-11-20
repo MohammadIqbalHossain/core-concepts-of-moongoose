@@ -413,3 +413,17 @@ In Mongoose, a model is a representation of a MongoDB collection and provides an
 ```js
 const Student = model < Student > ('Student', studentSchema)
 ```
+
+Video-9: route, Controller, service.
+
+Now, trying make a post using model and interface.
+
+first create a `student.route.ts` file in `./src/app/modules/student` import express and create route. Thes routes body is the controller. Make another file `student.controller.ts` and take data from req parameter. and make another file `student.services.ts` create function there that take a parameter whose data type is 'Student' and the function inserts data to mongodb and return the result.
+
+now controller will take the result and sent it to the client. student calls the services function to send data.
+
+video-10: Create a student using mongoose.
+
+first connect routes to `app.ts` in `app.use('path', yourRoutes)` and make a fake data. give them as raw json data. when using postman make an object in object to send json data and destructure the object in contoller file. it'll give response new json data.
+
+connect URI to mongoDB compass to see our data in compass.
