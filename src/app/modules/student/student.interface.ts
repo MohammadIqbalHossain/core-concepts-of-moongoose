@@ -1,8 +1,6 @@
-//Creating a interface for student .
-import { model } from 'mongoose'
-const myname = model('')
+//Creating a interface for student . Have to import import { Schema, model, connect } from 'mongoose';
 
-type Guardian = {
+export type Guardian = {
   fatherName: string
   fatherOccupation: string
   fatherContactNo: string
@@ -11,20 +9,31 @@ type Guardian = {
   motherContactNo: string
 }
 
+export type UserName = {
+  firstName: string
+  middleName: string
+  lastName: string
+}
+
+export type LocalGuardian = {
+  name: string
+  occupation: string
+  contactNo: string
+  address: string
+}
+
 export type Student = {
   id: string
-  name: {
-    firstName: string
-    middleName: string
-    lastName: string
-  }
+  name: UserName
+  dateOfBirth?: string
   gender: 'male' | 'female'
   email: string
-  avatar?: string
   contactNo: string
   emergencyContactNo: string
-  BloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-'
+  bloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-'
   presentAddress: string
   permanentAddress: string
   guardian: Guardian
+  localGuardian: LocalGuardian
+  studentImg?: string
 }

@@ -343,13 +343,15 @@ type Guardian = {
   motherContactNo: string
 }
 
+type UserName = {
+  firstName: string
+  middleName: string
+  lastName: string
+}
+
 export type Student = {
   id: string
-  name: {
-    firstName: string
-    middleName: string
-    lastName: string
-  }
+  name: UserName
   gender: 'male' | 'female'
   email: string
   avatar?: string
@@ -360,4 +362,54 @@ export type Student = {
   permanentAddress: string
   guardian: Guardian
 }
+```
+
+## video-6: make a schema.
+
+A schema is a blueprint or a structural representation that defines the organization, structure, and constraints of data in a database. It provides a formal description of how data is organized and the relationships between different entities or tables in a database
+
+Create a file in the `modules` name `student.models.ts` and make a schema there following mongoose documnetaion.
+
+```js
+//Our schema would follow structure of interface we made earlier.
+const userSchema =
+  new Schema() <
+  IUser >
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    avatar: String,
+  }
+```
+
+## Video-7:
+
+Make multiple schema to make code readable. Refactor code.
+
+For example:
+
+```js
+const userNameSchema =
+  newSchema <
+  T >
+  {
+    name: { type: String, required: true },
+  }
+
+const userSchema =
+  new Schema() <
+  IUser >
+  {
+    name: userNameSchema,
+    email: { type: String, required: true },
+    avatar: String,
+  }
+```
+
+Create a model.
+
+In Mongoose, a model is a representation of a MongoDB collection and provides an interface for interacting with the documents in that collection. It acts as a constructor function, allowing you to create, read, update, and delete documents in the MongoDB database.
+
+```js
+const Student = model < Student > ('Student', studentSchema)
 ```
