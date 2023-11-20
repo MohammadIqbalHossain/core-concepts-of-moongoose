@@ -88,10 +88,10 @@ Video-1:
 
    ```typescript
    // src/config/index.ts
-   import dotenv from "dotenv";
-   import path from "path";
+   import dotenv from 'dotenv'
+   import path from 'path'
 
-   dotenv.config({ path: path.join(process.cwd(), ".env") });
+   dotenv.config({ path: path.join(process.cwd(), '.env') })
    ```
 
 8. **Create `app.ts` file:**
@@ -102,16 +102,16 @@ Video-1:
 
    ```typescript
    // src/server.ts
-   import app from "./app";
-   import mongoose from "mongoose";
+   import app from './app'
+   import mongoose from 'mongoose'
 
    async function main() {
-     await mongoose.connect(process.env.DATABASE_URL);
+     await mongoose.connect(process.env.DATABASE_URL)
    }
 
    app.listen(process.env.PORT, () => {
-     console.log(`Example app listening on port ${process.env.PORT}`);
-   });
+     console.log(`Example app listening on port ${process.env.PORT}`)
+   })
    ```
 
 Now, you have a well-organized project structure with necessary configurations. Update the code according to your project requirements.
@@ -119,3 +119,74 @@ Now, you have a well-organized project structure with necessary configurations. 
 Video-3: setup typescript eslint.
 
 Read this docs: to setup eslint to your code. https://blog.logrocket.com/linting-typescript-eslint-prettier/
+
+Video - 4:
+
+Add some roles to `.eslinrc.json ` when we violate these rules our vscode will give error.
+Run your script to fix and check errors.
+
+Install pretieer.
+
+```
+npm install -save -D priteer
+```
+
+Now try to format with prettier. make a script to make formatting easy.
+
+```json
+"format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+```
+
+Go to vs code setting and make prettier default formatter.
+
+paste or overwrite these scripts.
+
+```json
+ "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+```
+
+Install prettier and eslint extension in your vs code.
+
+Sometimes prettier and eslint makes confilicts with eatchother for formating code. to fix the problem we have to install another package.
+
+run this command.
+
+```commad
+npm install --save-dev eslint-config-prettier
+```
+
+Go to .eslintrc.json file and overwrite this scripts.
+
+```json
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+```
+
+make a script command for prettier fix .
+
+```json
+ "prettier:fix":  "npx prettier --write src"
+```
+
+Add git repository to the project. and push your changes.
+
+Install ts-node-dev package to run typescript file in for development. with ts-node-dev we can run ts file and it'll run changes on the flight.
+
+give this command
+
+```commad
+npm i ts-node-dev --save-dev
+```
+
+make a script to for starting app with ts-node dev and add another script to run the app in production with node.
+
+```json
+"start:dev": "tsnd --respawn ./src/app/server.ts",
+"start:prod": "node ./dist/app/server.js",
+```
+
+Make a environment variable to indicate what is the position of our app right node.
+
+```js
+NODE_ENV = developmnet // if it's in productin we'll use 'Production' here.
+```
