@@ -427,3 +427,7 @@ video-10: Create a student using mongoose.
 first connect routes to `app.ts` in `app.use('path', yourRoutes)` and make a fake data. give them as raw json data. when using postman make an object in object to send json data and destructure the object in contoller file. it'll give response new json data.
 
 connect URI to mongoDB compass to see our data in compass.
+
+Video-11:
+
+Get all student using find method in services files. and get a single using id as params. Do it as video-9 and 10.

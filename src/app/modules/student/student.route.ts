@@ -7,6 +7,6 @@ routes.post('/create-student', studentController.createStudent)
 
 routes.get('/', studentController.getAllStudents)
 
-routes.get('/:studnetId', studentController.getSingleStudent)
+routes.get('/:studentId', studentController.getSingleStudent)
 
 export const studentRoutes = routes
