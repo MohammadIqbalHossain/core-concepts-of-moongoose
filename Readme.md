@@ -496,3 +496,34 @@ with enum values.
 ```
 
 Make a field uniquie. with `unique: true` validation and make a field default with `default:true` validation.
+
+Video-2:
+
+Using custom built-in validator.
+
+max, min, trim.
+
+Sending errors to the client site. It's same as sendig data to client side.
+
+```js
+ catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong.',
+      error: err,
+    })
+```
+
+Make a custom validatin function to check if firname is capitalized.
+
+```js
+   validate: {
+      validator: function (value: string) {
+        return (
+          value === value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+        )
+      },
+      message: 'First name must be capitalize.',
+    },
+  },
+```
