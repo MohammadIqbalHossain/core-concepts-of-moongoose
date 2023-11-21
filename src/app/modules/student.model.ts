@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+import validator from 'validator'
 import { Guardian, Student, UserName } from './student/student.interface'
 
 const userNameSchema = new Schema<UserName>({
@@ -24,6 +25,10 @@ const userNameSchema = new Schema<UserName>({
     trim: true,
     max: [20, 'User last name cannot be longer than 20 charecter'],
     required: [true, 'Last name is required'],
+    validate: {
+      validator: (value: string) => validator.isAlpha(value),
+      message: '{VALUE} is not valid.',
+    },
   },
 })
 

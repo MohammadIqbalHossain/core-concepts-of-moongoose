@@ -527,3 +527,7 @@ Make a custom validatin function to check if firname is capitalized.
     },
   },
 ```
+
+video-3:
+
+using validate and joi validator package for validation.
