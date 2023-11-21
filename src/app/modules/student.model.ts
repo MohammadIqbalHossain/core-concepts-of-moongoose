@@ -59,22 +59,59 @@ const localGuardianSchema = new Schema({
 })
 
 const studentSchema = new Schema<Student>({
-  id: { type: String },
-  name: userNameSchema,
+  id: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  name: {
+    type: userNameSchema,
+    required: [true, 'User name is required'],
+  },
 
   dateOfBirth: { type: String },
-  gender: ['male', 'female'],
-  email: { type: String, required: true },
-  contactNo: { type: String },
+  gender: {
+    type: String,
+    enum: {
+      values: ['male', 'female', 'others'],
+      message:
+        '{VALUE} is not valid. The value should be "male" or "female" or "others"',
+    },
+    required: true,
+  },
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    unique: true,
+  },
+  contactNo: { type: String, required: true },
   emergencyContactNo: { type: String, required: true },
-  bloodGroup: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+  bloodGroup: {
+    type: String,
+    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+  },
   presentAddress: { type: String, required: true },
   permanentAddress: { type: String, required: true },
-  guardian: guardianSchema,
+  guardian: {
+    type: guardianSchema,
+    required: true,
+  },
 
-  localGuardian: localGuardianSchema,
+  localGuardian: {
+    type: localGuardianSchema,
+    required: [true, 'Someting went wrong in local guradian data'],
+  },
 
   studentImg: { type: String },
+
+  isActive: {
+    type: String,
+    enum: {
+      values: ['active', 'blocked'],
+      message: 'The {VALUE} is not valid. It should be "active" or "blocked"',
+    },
+    default: 'active',
+  },
 })
 
 //Create a model.

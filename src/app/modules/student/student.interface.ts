@@ -36,4 +36,5 @@ export type Student = {
   guardian: Guardian
   localGuardian: LocalGuardian
   studentImg?: string
+  isActive: 'active' | 'blocked'
 }

@@ -431,3 +431,68 @@ connect URI to mongoDB compass to see our data in compass.
 Video-11:
 
 Get all student using find method in services files. and get a single using id as params. Do it as video-9 and 10.
+
+### Advance mongoDb CRUD operations with validation. Module-9.
+
+video-1: Types of validatio in Mongoose.
+
+1. Built-in validation.
+2. Custom validation.
+3. Validation with third-party libaries. (zod, validator, joi).
+
+# Build-in validation:
+
+let's fix some schema data validation error first.
+
+our enum validation wasn't correct we've to tell what type data is first then then do other validation.
+
+here is a fix:
+
+```js
+ gender: {
+    type: String,
+    enum: ['male', 'female'],
+    required: true,
+  },
+  // Fix everything.
+```
+
+Then need to fix another problem is, when we're sending a data without firatName as it's a required property it's gives an error. but when we're sending wihtout whole name field it's doesn't gives an error. but those fields are required. okay take look at those types data.
+
+```js
+localGuardian: localGuardianSchema
+```
+
+Change it to this..
+
+```js
+localGuardian: {
+  type: localGuradianSchema,
+  required: true,
+}
+```
+
+Give a custom error message when some data is null or mispelled.
+
+```js
+ name: {
+    type: userNameSchema,
+    required: [true, 'User name is required'],
+  },
+```
+
+with enum values.
+
+```js
+ gender: {
+    type: String,
+    enum: {
+      values: ['male', 'female', 'others'],
+      message:
+        '{VALUE} is not valid. The value should be "male" or "female" or "others"',
+    },
+    required: true,
+  },
+```
+
+Make a field uniquie. with `unique: true` validation and make a field default with `default:true` validation.
