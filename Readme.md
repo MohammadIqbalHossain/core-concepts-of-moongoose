@@ -535,3 +535,22 @@ using validate and joi validator package for validation.
 Video-4:
 
 Using joi package to validate data.
+
+
+
+
+Mission-3: Be a noSQl backend brianic.
+
+Module-11: Building PH university management system.
+
+I've to add video-1-5's description here.
+
+Video-6: 
+
+Determining api's endpoints for our projects.
+How API's will look like. And make a folder in moduels file named `users` add an `interface` file for users. and after that make `model` file for in users moduels folder, also make `services` and `controllers` files for users.
+
+Make and interface for `TUSer` accoriding to user determined in the ER Diagram and requiremnts analysis.
+
+Video-7:
+
