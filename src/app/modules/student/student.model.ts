@@ -1,7 +1,5 @@
-import bcrypt from 'bcrypt'
 import { Schema, model } from 'mongoose'
 import validator from 'validator'
-import config from '../../config'
 import {
   TGuardian,
   TStudent,
@@ -94,11 +92,12 @@ const studentSchema = new Schema<TStudent, studentModel>(
       required: [true, 'Student ID is required'],
       unique: true,
     },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      max: [20, 'Password cannot be longer than 20 charecters'],
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User ID is required'],
+      ref: 'user Id',
     },
+
     name: {
       type: userNameSchema,
       required: [true, 'User name is required'],
@@ -147,15 +146,6 @@ const studentSchema = new Schema<TStudent, studentModel>(
     },
 
     studentImg: { type: String },
-
-    isActive: {
-      type: String,
-      enum: {
-        values: ['active', 'blocked'],
-        message: 'The {VALUE} is not valid. It should be "active" or "blocked"',
-      },
-      default: 'active',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -172,21 +162,6 @@ studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await Student.findOne({ id })
   return existingUser
 }
-
-studentSchema.pre('save', async function (next) {
-  // console.log(this, 'Pre hook: we will save data')
-  const user = this
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcript_salt_rounds),
-  )
-  next()
-})
-
-studentSchema.post('save', function (doc, next) {
-  doc.password = ''
-  next()
-})
 
 studentSchema.pre('find', function (next) {
   // console.log(this)

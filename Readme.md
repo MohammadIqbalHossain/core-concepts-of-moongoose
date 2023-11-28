@@ -536,16 +536,13 @@ Video-4:
 
 Using joi package to validate data.
 
-
-
-
 Mission-3: Be a noSQl backend brianic.
 
 Module-11: Building PH university management system.
 
 I've to add video-1-5's description here.
 
-Video-6: 
+Video-6:
 
 Determining api's endpoints for our projects.
 How API's will look like. And make a folder in moduels file named `users` add an `interface` file for users. and after that make `model` file for in users moduels folder, also make `services` and `controllers` files for users.
@@ -553,4 +550,22 @@ How API's will look like. And make a folder in moduels file named `users` add an
 Make and interface for `TUSer` accoriding to user determined in the ER Diagram and requiremnts analysis.
 
 Video-7:
+Make a model and schema for user, and make zod validation for user.
 
+Video-8: Refactor user interface, student route, controller, and services.
+
+Now, we'll create a student using users routes. We've to take all the users creation in a single moduels, to do so, we'll take student create contoller, which is creating in the student controller folder, take it to the user controller folder and also take create creation service functon from the student services foder to user services.
+
+Video-9: Refactor user controller and services.
+
+make newUser type and add `user` `_id` `role` `generated id` while creating a student.
+
+I've to watch it again. it's not enough.
+
+video-10: Create user as student.
+
+I've to watch it again I didn't undeerstood it.
+
+Video-11: Fix bugs and setup basic global error handler.
+
+Change password hasing making response pass wrod empthy middleware. Now, we are not using password in the student it took to in user so take password hasing middleware for user.
