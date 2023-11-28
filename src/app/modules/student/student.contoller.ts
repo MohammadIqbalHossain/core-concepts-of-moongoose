@@ -1,60 +1,67 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
+import httpStatus from 'http-status'
+import sendResponse from '../../utils/sendResponse'
 import { studentServices } from './student.services'
-// import studentValidationSchema from './validation.joi'
 
-const getAllStudents = async (req: Request, res: Response) => {
+//Controller for retreiving all students from database.
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await studentServices.getStudentsFromDB()
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      message: 'Students retrived from database',
+      message: 'Students retrived from database successfully.',
       data: result,
     })
-  } catch (err: any) {
-    res.status(500).json({
-      success: true,
-      message: err.message || 'Something went wrong',
-      data: err,
-    })
+  } catch (err) {
+    next(err)
   }
 }
 
-const getSingleStudent = async (req: Request, res: Response) => {
+//Controller for retreiveing a single student from database.
+const getSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { studentId } = req.params
     const result = await studentServices.getSingleStudentFromDB(studentId)
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      message: 'Single student retrieved',
+      message: 'Single student successfully.',
       data: result,
     })
-  } catch (err: any) {
-    res.status(500).json({
-      success: true,
-      message: err.message || 'Something went wrong',
-      data: err,
-    })
+  } catch (err) {
+    next(err)
   }
 }
 
-const deleteStudent = async (req: Request, res: Response) => {
+//Controller for deteting a single student from database.
+const deleteStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { studentId } = req.params
     const result = await studentServices.deleteSignleStudent(studentId)
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: 'Student deleted successfully.',
       data: result,
     })
-  } catch (err: any) {
-    res.status(500).json({
-      success: true,
-      message: err.message || 'Something went wrong',
-      data: err,
-    })
+  } catch (err) {
+    next(err)
   }
 }
 

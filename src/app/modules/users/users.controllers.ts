@@ -1,24 +1,26 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
+import httpStatus from 'http-status'
+import sendResponse from '../../utils/sendResponse'
 import { userServices } from './users.services'
 
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { password, student: studentData } = req.body
 
     const result = await userServices.createStudentIntoDB(password, studentData)
 
-    ///Send response to client.
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      message: 'Created a student',
+      message: 'Student created successfully.',
       data: result,
     })
   } catch (err: any) {
-    res.status(500).json({
-      success: true,
-      message: err.message || 'Something went wrong',
-      data: err,
-    })
+    next(err)
   }
 }
 

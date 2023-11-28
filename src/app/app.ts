@@ -1,5 +1,7 @@
 import cors from 'cors'
 import express, { type Application } from 'express'
+import globalErrorHandler from './middlewares/globalErrorHandler'
+import notFound from './middlewares/notFound'
 import { studentRoutes } from './modules/student/student.route'
 import { userRoutes } from './modules/users/users.route'
 
@@ -12,10 +14,11 @@ app.use(cors())
 app.use('/api/v1/students', studentRoutes)
 app.use('/api/v1/users', userRoutes)
 
-// app.get('/', (req: Request, res: Response) => {
-//   const a = 10
-//   res.sendStatus(200).send(a)
-// })
+//Global error handler.
+app.use(globalErrorHandler)
+
+//Handleing not found API response.
+app.use(notFound)
 
 console.log(process.cwd())
 
