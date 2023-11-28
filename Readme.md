@@ -536,9 +536,9 @@ Video-4:
 
 Using joi package to validate data.
 
-Mission-3: Be a noSQl backend brianic.
+### Mission-3: Be a noSQl backend brianic.
 
-Module-11: Building PH university management system.
+## Module-11: Building PH university management system.
 
 I've to add video-1-5's description here.
 
@@ -614,4 +614,80 @@ const moduleRoutes = [
 moduleRoutes.forEach((route) => router.use(route.path, route.route))
 
 export default router
+```
+
+## Module-12: Building PH university management system (Part-2).
+
+### Video-1: Avoid try/catch use a catchAsync(a hingher order function.)
+
+When we're making controller we're using to much try and catch and it's make code repetation, to handle this we can use a hinger order funciton. that recives the code as a parameter and highre order function calls a the function in a promise if it doesn't resolves then err is passed to global error hander from a single place.
+
+This is the higher order function:
+
+```js
+const catchAsync = (fn: RequestHandler) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch((err) => next(err))
+  }
+}
+```
+
+Calling it when making controller:
+
+```js
+//Controller for retreiving all students from database.
+const getAllStudents = catchAsync(async (req, res, next) => {
+  const result = await studentServices.getStudentsFromDB()
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Students retrived from database successfully.',
+    data: result,
+  })
+})
+```
+
+No need to use try catch.
+
+Here `RequestHandler` is a fucntion type from express. It's uses not to repeate re,res, next parameter type.
+
+### Video-2: Implement a data validation middleware.
+
+We're using zod validation in the controller. But it's not clener and safer way to validate data. To make it safer and cleaner we can ues a middle in the user route level bedore accesing controller. If data is auhenticated user can add data to db, if it's not we've to send it to global error handler by next function.
+
+### Video-3: Implement a validation request middleware.
+
+Implementina a validation request middleware when creating a student. in the route and make it reusable for other route also here is how to make the middleware.
+
+```js
+import { NextFunction, Request, Response } from 'express'
+import { AnyZodObject } from 'zod'
+
+const validateRequest = (schema: AnyZodObject) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await schema.parseAsync({
+        body: req.body,
+      })
+
+      return next()
+    } catch (err) {
+      next(err)
+    }
+  }
+}
+
+export default validateRequest
+
+```
+
+Implementing it in the route.
+
+```js
+routes.post(
+  '/create-student',
+  validateRequest(studentValidation),
+  usersController.createStudent,
+)
 ```

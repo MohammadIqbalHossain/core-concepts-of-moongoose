@@ -87,11 +87,6 @@ const localGuardianSchema = new Schema({
 
 const studentSchema = new Schema<TStudent, studentModel>(
   {
-    id: {
-      type: String,
-      required: [true, 'Student ID is required'],
-      unique: true,
-    },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, 'User ID is required'],
@@ -144,7 +139,6 @@ const studentSchema = new Schema<TStudent, studentModel>(
       type: localGuardianSchema,
       required: [true, 'Local guardian information is required'],
     },
-
     studentImg: { type: String },
     isDeleted: {
       type: Boolean,
