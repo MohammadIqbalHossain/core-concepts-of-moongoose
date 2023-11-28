@@ -569,3 +569,49 @@ I've to watch it again I didn't undeerstood it.
 Video-11: Fix bugs and setup basic global error handler.
 
 Change password hasing making response pass wrod empthy middleware. Now, we are not using password in the student it took to in user so take password hasing middleware for user.
+
+Making a global error handler function for all the methods in controller to make our code clean and readable.
+
+Video-12: Create not found and send response utlities.
+
+Make not found route to handle unrecognized API's request, make a not found middleware and sed a json data.
+
+Handle sucess response data more readably and make code dry. first make a middleware for all the success message send all data and res and status code there by calling the middleware, use the middleware for all succes message response.
+
+Video-13: Create index route and module summury.
+
+Creatinga route folder wher you've to take all the application routes to amek `app.js` file clear. and import that folder route here in app.js
+
+`app.js` application route would look like this.
+
+```js
+//Application routes.
+app.use('/api/v1', router)
+```
+
+in the route folder making a loop over all routes and and enpoints routes which we're importing from route `module.route file`
+
+`index.js` file in route folder would look-like this:
+
+```js
+import { Router } from 'express'
+import { studentRoutes } from '../modules/student/student.route'
+import { userRoutes } from '../modules/users/users.route'
+
+const router = Router()
+
+const moduleRoutes = [
+  {
+    path: '/students',
+    route: studentRoutes,
+  },
+  {
+    path: '/users',
+    route: userRoutes,
+  },
+]
+
+moduleRoutes.forEach((route) => router.use(route.path, route.route))
+
+export default router
+```
