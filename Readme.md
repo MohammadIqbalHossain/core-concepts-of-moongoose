@@ -691,3 +691,63 @@ routes.post(
   usersController.createStudent,
 )
 ```
+
+### Video-4: Create an academic semester interface.
+
+Creating an acdemic semester interface and schema for acdemic semester.
+
+### Video-5: Create an academic semester Model.
+
+Creating and refactoring academic semester model and interface to align them into same data structure.
+
+### Video-6: Create an academic semester route, controller.
+
+Creatinga an acdemic semester controller and route file and appropiate code to it.
+
+### Video-7: Create an academic semester service.
+
+Create an academic semester service file and create an academic semester data into DB. The system is almost same only catchAsync function (Higher order fucntion ) and validation is different. We're validating data by using an middleware.
+
+### Video-8: Handle academic semester logical validation.
+
+When crating academic semester we've to check two scenarion. We can't make same semester twice in same year. It's not possible in real-life scenarion. So, we've to check academic semester name is inserting in the same year.
+
+To do so, we can use a middleware in the schem layer. find if the name and year is entered twice in the DB.
+
+```js
+academicSemesterSchema.pre('save', async function (next) {
+  const isSemesterExists = await academicSemester.findOne({
+    year: this.year,
+    name: this.name,
+  })
+
+  if (isSemesterExists) {
+    throw new Error(`Academic semester is already exists!`)
+  }
+  next()
+})
+```
+
+But, we can enter the invalid code into, this is not giving me error. actually accoroding to our model. our code has to be like authm - 01, summar -02 fal -03, Without handling this we can mismatch them.
+
+We have check if the data is adding with a false code.
+
+first make mapper to check name and code.
+
+```js
+//Type for checking name and code is matched when making academic semester.
+export type TNameCodeMapper = {
+  [key: string]: string
+}
+
+//Mapper for checking if name and code is matched when making academic semester.
+export const NameCodeMapper: TNameCodeMapper = {
+  Autmn: '01',
+  Summar: '02',
+  Fall: '03',
+}
+
+ if (NameCodeMapper[payLoad.name] !== payLoad.code) {
+    throw new Error('Invalid semester code!')
+  }
+```
