@@ -761,3 +761,26 @@ We've to add a reference id it the student to indentify in what semester the stu
 add an `academicSemester` field in the student interface, model and validation file.
 
 Make function in the user services file for dynamically crating studentId for every new student.
+
+### Video-10: Generate Student id when first time a student is admitted.
+
+in users services we're creating a student and a user when making user we have to add a user id. In this function we're creating a student id based on admission semester, admission semester id is referenced with studend data. We're getting the semester data with reference semester id and in semester data there is code, year with that we're making a incremented 4 digit number. and adding it as an user id to database.
+
+```js
+
+import { TAcademicSemester } from '../academicSemester/academicSemester.interface'
+
+export const generateStudentId = (payLoad: TAcademicSemester | null) => {
+  const currentId = (0).toString()
+  const incrementId = Number(currentId + 1)
+    .toString()
+    .padStart(4, '0')
+
+  const studentId = `${payLoad?.year}${payLoad?.code}${incrementId}`
+  return studentId
+}
+```
+
+### Video-11: Creating an incremented id for last student.
+
+It's not working in my case IDK why...

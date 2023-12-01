@@ -45,7 +45,7 @@ const createStudentValidationSchema = z.object({
       .max(20, 'Password cannot be longer than 20 characters'),
     student: z.object({
       name: userNameValidationSchema,
-      dateOfBirth: z.date().optional(),
+      dateOfBirth: z.string().optional(),
       gender: z
         .enum(['male', 'female', 'others'])
         .refine((value) => ['male', 'female', 'others'].includes(value), {
