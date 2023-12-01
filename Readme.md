@@ -751,3 +751,13 @@ export const NameCodeMapper: TNameCodeMapper = {
     throw new Error('Invalid semester code!')
   }
 ```
+
+### Video-9: Add admission semester into student interface model and semester.
+
+First, Create GET, PATCH(updata), GET (Single) methods for academic semester.
+
+We've to add a reference id it the student to indentify in what semester the student is admitted.
+
+add an `academicSemester` field in the student interface, model and validation file.
+
+Make function in the user services file for dynamically crating studentId for every new student.

@@ -12,4 +12,9 @@ routes.post(
   academicSemesterController.createAcademicSemester,
 )
 
+routes.get(
+  '/get-academic-semester',
+  academicSemesterController.getAllAcademicSemester,
+)
+
 export const academicSemesterRoutes = routes
