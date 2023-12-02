@@ -781,6 +781,74 @@ export const generateStudentId = (payLoad: TAcademicSemester | null) => {
 }
 ```
 
-### Video-11: Creating an incremented id for last student.
+### Video-11: generating an incremented id for last student.
 
-It's not working in my case IDK why...
+Findding out last student id from users and adding one to the last 4 digit when creating a new student.
+
+```js
+const findLastUserID = async () => {
+  const lastUserId = await User.findOne({ role: 'student' }, { id: 1, _id: 0 })
+    .sort({ createdAt: -1 })
+    .lean()
+  return lastUserId?.id ? lastUserId?.id.subString(6) : undefined
+}
+
+
+const generateStudentID = async (payLoad: TAcademicSemester | null) => {
+   //2030020001
+
+  const currentId = await findLastUserId() || (0).toString()
+  let incrementId = (Number(currentId) + 1).toString().padStart(4, '0')
+
+  incrementId = `${payLoad?.year}${payLoad?.code}${incrementId}`
+  return incrementId
+}
+```
+
+# Module-12: Building PH-University part-3.
+
+### Video-1: Intro and last module bug fixing.
+
+When we're generating an id based on last student's roll number, there is a little bug. It's always adds 1 to it. no matter what is the year and is the semester code. we should add 1 when semester code is not new compared to last one and year is not new compared to last one.
+
+That means whenever a semester code or a year is changes, Id must start from 0. because we're admitting student in another semester or another year.
+
+For fixing this problem. findout last student year and semester code. write an if else block to reassign currentId.
+
+Here how it's should be done:
+
+```js
+
+const findLastUserID = async () => {
+  const lastUserId = await User.findOne({ role: 'student' }, { id: 1, _id: 0 })
+    .sort({ createdAt: -1 })
+    .lean()
+  return lastUserId?.id ? lastUserId?.id : undefined
+}
+
+export const generateStudentId = async (payLoad: TAcademicSemester | null) => {
+  const lastStudentID = await findLastUserID()
+  const lastStudentSemesterCode = lastStudentID?.substring(4, 6)
+  const lastStudentYear = lastStudentID?.substring(0, 4)
+
+  const currentYear = payLoad?.year
+  const currentSemesterCode = payLoad?.code
+
+  let currentId = (0).toString()
+
+  if (
+    lastStudentID &&
+    lastStudentSemesterCode === currentSemesterCode &&
+    lastStudentYear === currentYear
+  ) {
+    currentId = lastStudentID?.substring(6)
+  }
+
+  //2030020001
+
+  let incrementId = (Number(currentId) + 1).toString().padStart(4, '0')
+
+  incrementId = `${payLoad?.year}${payLoad?.code}${incrementId}`
+  return incrementId
+}
+```

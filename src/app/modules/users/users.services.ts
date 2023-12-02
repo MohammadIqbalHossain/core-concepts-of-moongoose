@@ -22,6 +22,10 @@ const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
   //set a generated id.
   userData.id = await generateStudentId(admissionSemester)
 
+  // User.createIndexes({ key: { email: 1 }, unique: true } as Parameters<
+  //   typeof User.createIndexes
+  // >[0])
+
   const newUser = await User.create(userData)
 
   if (Object.keys(newUser)) {
@@ -29,10 +33,9 @@ const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
     payLoad.user = newUser._id
 
     const newStudent = await Student.create(payLoad)
-    return newStudent
   }
 
-  // return newUser
+  return newUser
 }
 
 export const userServices = {

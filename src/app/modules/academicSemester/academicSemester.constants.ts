@@ -30,6 +30,6 @@ export const academicSemesterCode: TAcademicSemesterCode[] = ['01', '02', '03']
 //Mapper for checking if name and code is matched when making academic semester.
 export const NameCodeMapper: TNameCodeMapper = {
   Autmn: '01',
-  Summar: '02',
+  Summer: '02',
   Fall: '03',
 }
