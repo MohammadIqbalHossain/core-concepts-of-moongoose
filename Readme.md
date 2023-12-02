@@ -868,4 +868,13 @@ Create interface, mode, and service for, post, get, single get, and update.
 Testing all APIs created bedore! and making an environment varibale for Postman to keep local URL in a single place so that we don't need to write the url evry time we create a request.
 
 
-### Video-5: 
+### Video-5: Create academic departments.
+
+Crete academic departments interface, model, validation and sevice.
+
+### Video-6: Testing and creating controllers.
+
+Teste academic deparments using Postman and complete creating controllers and route.
+
+### Video-7: Handle department validation with when crating and updating documents.
+
