@@ -852,3 +852,20 @@ export const generateStudentId = async (payLoad: TAcademicSemester | null) => {
   return incrementId
 }
 ```
+
+### Video-2: Create a academic faculty interface, model and validation.
+
+In `modules` file We've to create a academic semester faculty interface with just a name academic faculty contains only name that is requred and a string.
+
+By following this interface we've to create a schema and a model for academic semester faculy.
+
+### Video-3: Creating an interface, model, and service for factulties.
+
+Create interface, mode, and service for, post, get, single get, and update.
+
+### Video-4: Testing APIs.
+
+Testing all APIs created bedore! and making an environment varibale for Postman to keep local URL in a single place so that we don't need to write the url evry time we create a request.
+
+
+### Video-5: 
