@@ -33,9 +33,10 @@ const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
     payLoad.user = newUser._id
 
     const newStudent = await Student.create(payLoad)
+    return newStudent
   }
 
-  return newUser
+  // return newUser
 }
 
 export const userServices = {

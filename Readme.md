@@ -867,7 +867,6 @@ Create interface, mode, and service for, post, get, single get, and update.
 
 Testing all APIs created bedore! and making an environment varibale for Postman to keep local URL in a single place so that we don't need to write the url evry time we create a request.
 
-
 ### Video-5: Create academic departments.
 
 Crete academic departments interface, model, validation and sevice.
@@ -876,5 +875,94 @@ Crete academic departments interface, model, validation and sevice.
 
 Teste academic deparments using Postman and complete creating controllers and route.
 
-### Video-7: Handle department validation with when crating and updating documents.
+### Video-7: Handle department validation with when creating and updating documents.
 
+Adding a middleware to check if the depertment is alreay exists on the database, Sometimes unique doesn't work. It's not a proper validation. Adding another layer of validation with indexing. find the name with find method in databse if it's exists throw and error.
+
+```ts
+academicDepartmentSchema.pre('save', async function (next) {
+  const isDepertmentExists = await AcademicDepartment.findOne({
+    name: this.name,
+  })
+
+  if (isDepertmentExists) {
+    throw new Error('This depertment is already exists.')
+  }
+  next()
+})
+```
+
+Adding another middleware to check if the \_id is already deleted or it's actually exists on the databse. If it's not exists there throw an error.
+
+```ts
+academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
+  const query = this.getQuery()
+
+  const isDepertmentExists = await AcademicDepartment.findOne(query)
+
+  if (!isDepertmentExists) {
+    throw new Error('Depertment does not exists!')
+  }
+  next()
+})
+```
+
+### Video-8: Populate referencing field and Impplement AppError class.
+
+Populate reference field to know excat reference data in response. 
+
+```js
+const getStudentsFromDB = async () => {
+  const result = await Student.find()
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    })
+    //These are nesterd populte methods. 
+  return result
+}
+```
+
+Extends Error class to give excact error in response.
+
+```js
+
+class AppError extends Error {
+  public statusCode: number
+
+  constructor(statusCode: number, message: string, stack = '') {
+    super(message)
+    this.statusCode = statusCode
+
+    if (stack) {
+      this.stack = stack
+    } else {
+      Error.captureStackTrace(this, this.constructor)
+    }
+  }
+}
+
+export default AppError
+```
+
+use the class:
+
+```js
+academicSemesterSchema.pre('save', async function (next) {
+  const isSemesterExists = await academicSemester.findOne({
+    year: this.year,
+    name: this.name,
+  })
+
+  if (isSemesterExists) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      `Academic semester is already exists!`,
+    )
+  }
+  next()
+})
+```
