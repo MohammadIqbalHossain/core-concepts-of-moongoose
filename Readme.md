@@ -909,7 +909,7 @@ academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
 
 ### Video-8: Populate referencing field and Impplement AppError class.
 
-Populate reference field to know excat reference data in response. 
+Populate reference field to know excat reference data in response.
 
 ```js
 const getStudentsFromDB = async () => {
@@ -921,7 +921,7 @@ const getStudentsFromDB = async () => {
         path: 'academicFaculty',
       },
     })
-    //These are nesterd populte methods. 
+  //These are nesterd populte methods.
   return result
 }
 ```
@@ -965,4 +965,93 @@ academicSemesterSchema.pre('save', async function (next) {
   }
   next()
 })
+```
+
+### Video-9: Creating student and user with transation and roll-back.
+
+```js
+// Step-1: start session
+const session = await mongoose.startSession()
+
+//Step-2: Take the whole creation in try/catch block
+
+try {
+  session.startTransaction()
+
+  //set a generated id.
+  userData.id = await generateStudentId(admissionSemester)
+
+  //step-3: Create user with transaction session. Note that data has to be in the [array]. after implement session.
+  const newUser = await User.create([userData], { session })
+
+  //Step-4: Check if newUser is crated. If isn't give an error.
+  if (!newUser.length) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create the user.')
+  }
+
+  //step-5 Set userId and generated id to the payload.
+  payLoad.id = newUser[0].id
+  payLoad.user = newUser[0]._id //reference user id
+
+  //step-6: Create the new student with session transaction.
+  const newStudent = await Student.create([payLoad], { session })
+
+  //step-7: check and give an error if the newStudent isn't created.
+  if (!newStudent.length) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create the student.')
+  }
+  //Step-8: If everything is okay commit everything.
+  await session.commitTransaction()
+  //Step-9: End the session.
+  await session.endSession()
+
+  return newStudent
+} catch (err) {
+  //step-10: If something goes wrong aborot the session
+  await session.abortTransaction()
+  //step:-11: End the session.
+  await session.endSession()
+}
+```
+
+### Video-10: Delete student and user with transation and roll-back.
+
+Everything is same just when updating in Model field shouln't be in the [array]. that's it.
+
+### Video-11: Creating path method to update student.
+
+Creat controller, service, zod validation and route to update student.
+
+### Video-12: Dynamically updating student primitive and non-primitve data.
+
+```js
+const updateStudentIntoDB = async (id: string, payLoad: Partial<TStudent>) => {
+  const { name, guardian, localGuardian, ...reminingStudentData } = payLoad
+
+  const modifiedStudentData: Record<string, unknown> = {}
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedStudentData[`name.${key}`] = value
+    }
+  }
+
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedStudentData[`guardian.${key}`] = value
+    }
+  }
+
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedStudentData[`localGuardian.${key}`] = value
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({ id }, modifiedStudentData, {
+    new: true,
+    runValidators: true,
+  })
+  return result
+}
 ```

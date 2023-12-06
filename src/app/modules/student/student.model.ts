@@ -92,7 +92,11 @@ const studentSchema = new Schema<TStudent, studentModel>(
       required: [true, 'User ID is required'],
       ref: 'User',
     },
-
+    id: {
+      type: String,
+      require: true,
+      unique: true,
+    },
     name: {
       type: userNameSchema,
       required: [true, 'User name is required'],
@@ -184,15 +188,13 @@ studentSchema.pre('aggregate', function (next) {
   next()
 })
 
+//TODO: This pre hook is to check if users is exists or not when deleteing user and student.
+// studentSchema.pre('findOneAndUpdate', function (next) {})
+
 //Virtuals
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.middleName}`
 })
-
-// studentSchema.methods.isUserExists = async function (id: string) {
-//   const existingUser = Student.findOne({ id })
-//   return existingUser
-// }
 
 // Create a model.
 export const Student = model<TStudent, studentModel>('Student', studentSchema)

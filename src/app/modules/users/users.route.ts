@@ -6,7 +6,7 @@ const routes = express.Router()
 
 routes.post(
   '/create-student',
-  validateRequest(studentValidation),
+  validateRequest(studentValidation.createStudentValidationSchema),
   usersController.createStudent,
 )
 
