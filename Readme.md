@@ -1055,3 +1055,71 @@ const updateStudentIntoDB = async (id: string, payLoad: Partial<TStudent>) => {
   return result
 }
 ```
+
+# Module-14: Building University management system Part-4.
+
+### Video-1: Different types of errors:
+
+1. Operational Errors.
+2. Programmatical erros.
+3. Unhandled rejections.
+4. Uncaught exception.
+
+### Video-2: Different types of errors:
+
+Make a errorSources for maintain a same pattern for all types of erros, Coverting zod error to our created patter, first we need to check the error is a subcalss of zoderror. and understanding differnt types of error and different files like model, services, zod and other things will give us diffrent pattern types of erros. We have to convert it to a common pattern to give response to the frontend.
+
+```js
+  //Making a error souces to covert the errors.
+  type TErrorSource = {
+    path: string | number
+    message: string
+  }[]
+
+  let errorSoources: TErrorSource = [
+    {
+      path: '',
+      message: 'Something went wrong!',
+    },
+  ]
+
+  //Checking if the err is subclass of zoderror.
+    if (err instanceof ZodError) {
+    statusCode = 400
+    message = 'This is zod error.'
+  }
+```
+
+### Video-3: Coverting zodError to our deafult error format:
+
+first check if the error is an zoderror, then send it to the zod error handler, map on the error properties get path and message from the zodError and return error statusCode, message and path to globalErrorHandler Then overwrite defult valus with incoming values from ZodErrorHandler.
+
+### Video-4: Coverting Mongoose to our deafult error format:
+
+This is also same we've to just think about what is the format is given by default we've to change it to our format. Tht's it!
+
+### Video-5: Coverting Mongoose to our deafult error format:
+
+Handling `casteError` for a invialid id with the same way. and handling the mongoDB duplicate entity with the same way. It's not neccesary if we did it with a middleware, But it's a good habit to handle everything layer by layer. This way our code is isolated!
+
+### Video-6: Coverting Mongoose to our deafult error format:
+
+Hadling uncaught exveption and uncaughtPromiseRejection:
+
+```js
+process.on('UnhandledPromiseRejection', () => {
+  console.log('🔥 Unhandled Rejection is detected, Shutting down...')
+
+  if (server) {
+    server.close(() => {
+      process.exit(1)
+    })
+  }
+  process.exit(1)
+})
+
+process.on('uncaughtException', () => {
+  console.log('🔥 uncaughtException is detected, Shutting down...')
+  process.exit(1)
+})
+```
