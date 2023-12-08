@@ -1104,7 +1104,9 @@ Handling `casteError` for a invialid id with the same way. and handling the mong
 
 ### Video-6: Coverting Mongoose to our deafult error format:
 
-Hadling uncaught exveption and uncaughtPromiseRejection:
+Handling `AppError` and `Error` class to show error in our format. 
+
+Hadling uncaught exception and uncaughtPromiseRejection:
 
 ```js
 process.on('UnhandledPromiseRejection', () => {
@@ -1123,3 +1125,5 @@ process.on('uncaughtException', () => {
   process.exit(1)
 })
 ```
+
+### Video-7: Coverting Mongoose to our deafult error format:
