@@ -14,10 +14,11 @@ const test = async (req: Request, res: Response) => {
   res.send('this is a test rotue')
 }
 
-app.use('/', test)
-
 //Application routes.
 app.use('/api/v1', router)
+
+//Test route!
+app.use('/', test)
 
 //Global error handler.
 app.use(globalErrorHandler)

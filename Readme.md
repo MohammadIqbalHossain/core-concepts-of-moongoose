@@ -1104,7 +1104,7 @@ Handling `casteError` for a invialid id with the same way. and handling the mong
 
 ### Video-6: Coverting Mongoose to our deafult error format:
 
-Handling `AppError` and `Error` class to show error in our format. 
+Handling `AppError` and `Error` class to show error in our format.
 
 Hadling uncaught exception and uncaughtPromiseRejection:
 
@@ -1126,4 +1126,205 @@ process.on('uncaughtException', () => {
 })
 ```
 
-### Video-7: Coverting Mongoose to our deafult error format:
+### Video-7: Doing raw searching with regex:
+
+step-1: give a `searchTerm` in the `URL`.
+
+step-2: Grab it from the `req.query` and send it to the services.
+
+step-3: get the object `{searchTerm: 'your_search_string'}` in the services. make a variable if the query is exist in the API then assign the `searchTerm` in the variable.
+
+step-4: Now, we have to search partial matching of the `searchTerm`. First we need to make a expression to findout the partial matched.
+
+```js
+fieldName: {$regex: query.searchTerm, $options: 'i'}
+
+//regex is for searching for the query and options make the string case in-sensetive.
+```
+
+step-5: Now, we've to make every field name and and a same query if there is fieldName to search. To make it easier: we can use map after taking all field name in the `[array]`.
+
+Such as:
+
+```js
+//This is to make a regexPattern it's makes code more readable, and When using ooptions, it's might cause some problem, to avoid the problem. we can use this regex generator from JS.
+const regexPattern = new RegExp(searchTerm, 'i')
+
+const result = await Student.find({
+  $or: [
+    'name',
+    'name.firstName',
+    'name.middleName',
+    'fullName',
+    'email',
+    'presentAddress',
+  ].map((field) => ({
+    [field]: regexPattern,
+  })),
+})
+```
+
+### Video-8: Filtering, sorting, limiting:
+
+We've to filter sort and limit by chaining. There is enought comments the getAllStudents service is self explainatory.
+
+```js
+const getStudentsFromDB = async (query: Record<string, unknown>) => {
+  console.log('Base Query', query)
+
+  //Makinga copy of query.
+  const queryObj = { ...query }
+
+  let searchTerm = ''
+
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string
+  }
+
+  const searchableFields = [
+    'name',
+    'name.firstName',
+    'name.middleName',
+    'fullName',
+    'email',
+    'presentAddress',
+  ]
+
+  //It's a regEx for partial search.
+  const regexPattern = new RegExp(searchTerm, 'i')
+
+  //Search partial match based on query. It's initial declaration because didn't used await here.
+  const partialSearchQuery = Student.find({
+    $or: searchableFields.map((field) => ({
+      [field]: regexPattern,
+    })),
+  })
+
+  //Exclude quey from the query object for filtering!
+  const excludeQuery = ['searchTerm', 'sort', 'limit', 'page']
+  excludeQuery.forEach((queryEl) => delete queryObj[queryEl])
+
+  //Use partial search  query and filtering simolteniously.
+  const filterQuery = partialSearchQuery
+    .find(queryObj)
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    })
+
+  //Sorting by query parameter or by default sor by 'createdAt' on desending.
+  let sortQueryParam = '-createdAt'
+
+  if (query?.sort) {
+    sortQueryParam = query?.sort as string
+  }
+
+  //Sorting by the sortQueryParams
+  const sortQuery = filterQuery.sort(sortQueryParam)
+
+  //Limit by limit query params.
+  let limitQueryParam = 1
+  let skip = 0,
+
+  let page = 1,
+
+  if (query.limit) {
+    limitQueryParam = query?.limit as number
+  }
+
+
+  if(query?.page){
+    page = query?.page
+    skip = (page - 1) * limitf
+  }
+
+
+
+  //Limiting here
+  const paginateQuery = await sortQuery.skip(skip)
+
+  return paginateQuery
+}
+```
+
+### Video-9: pagination and field filtering:
+
+skip = (page - 1) \* limit.
+
+```js
+let limit = 1
+let page = 1
+let skip = 0
+
+if (query.limit) {
+  limit = Number(query.limit)
+}
+
+if (query.page) {
+  page = Number(query.page)
+  skip = (page - 1) * limit
+}
+```
+
+Filed filtering:
+
+```js
+
+  let fields = '-__v'
+
+  if (query.fields) {
+    fields = (query.fields as string).split(',').join(' ')
+    console.log({ fields })
+  }
+
+  const fieldQuery = await limitQuery.select(fields)
+
+  return fieldQuery
+```
+
+### Video-10: Taking search and filter method into a Class:
+
+Taking filter and search into a class for more readablity and clean code.
+
+```js
+
+class QueryBuilder<T> {
+  public queryModel: Query<T[], T>
+  public query: Record<string, unknown>
+
+  constructor(queryModel: Query<T[], T>, query: Record<string, unknown>) {
+    this.queryModel = queryModel
+    this.query = query
+  }
+//Search
+  search(searchableFields: string[]) {
+    if (this.query.searchTerm) {
+      const regexPattern = new RegExp(this.query.searchTerm as string, 'i')
+      this.queryModel = this.queryModel.find({
+        $or: searchableFields.map(
+          (field) =>
+            ({
+              [field]: regexPattern,
+            }) as FilterQuery<T>,
+        ),
+      })
+    }
+    return this
+  }
+
+  //Filter.
+  filter() {
+    const queryObj = { ...this.query }
+    const excludeQuery = ['searchTerm', 'sort', 'limit', 'page', 'fields']
+    excludeQuery.map((queryEl) => delete queryObj[queryEl])
+
+    this.queryModel = this.queryModel.find(queryObj as FilterQuery<T>)
+
+    return this
+  }
+}
+
+```

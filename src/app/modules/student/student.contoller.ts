@@ -5,7 +5,9 @@ import { studentServices } from './student.services'
 
 //Controller for retreiving all students from database.
 const getAllStudents = catchAsync(async (req, res, next) => {
-  const result = await studentServices.getStudentsFromDB()
+  const searchTerm = req.query
+
+  const result = await studentServices.getStudentsFromDB(searchTerm)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

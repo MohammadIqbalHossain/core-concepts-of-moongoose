@@ -162,6 +162,7 @@ const studentSchema = new Schema<TStudent, studentModel>(
     toJSON: {
       virtuals: true,
     },
+    timestamps: true,
   },
 )
 
@@ -193,7 +194,7 @@ studentSchema.pre('aggregate', function (next) {
 
 //Virtuals
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.middleName} ${this.name.middleName}`
+  return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.middleName}`
 })
 
 // Create a model.
