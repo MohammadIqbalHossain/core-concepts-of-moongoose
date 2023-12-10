@@ -1328,3 +1328,11 @@ class QueryBuilder<T> {
 }
 
 ```
+
+### Video-11: Doing sorting, pagination, and field filtering:
+
+Doing sorting, pagination, and field filtering and using the `QueryBuilder` class in the `student.service.ts` file insted of raw sorting, pagination, search and other things.
+
+### Video-13: Practice Tasks:
+
+I've to do the practice task!

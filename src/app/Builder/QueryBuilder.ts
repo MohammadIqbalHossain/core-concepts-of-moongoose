@@ -10,9 +10,7 @@ class QueryBuilder<T> {
   }
 
   search(searchableFields: string[]) {
-    const searchTerm = ((this?.query?.searchTerm as string) || '')
-      .trim()
-      .toLowerCase()
+    const searchTerm = this?.query?.searchTerm as string
 
     if (searchTerm) {
       const regexPattern = new RegExp(searchTerm, 'i')
@@ -54,8 +52,8 @@ class QueryBuilder<T> {
   }
 
   pagination() {
-    const limit = Number(this?.query?.limit) || 1
-    const page = Number(this.query?.page) || 1
+    const limit = Number(this?.query?.limit)
+    const page = Number(this.query?.page)
     const skip = (page - 1) * limit
 
     this.queryModel = this.queryModel.skip(skip)
